@@ -1,0 +1,129 @@
+CSRequest,
+
+Las llamadas o peticiones a servidores para almacenar o consultar información por medio de una API Rest
+es un recurso que la mayoría de los programadores utilizan constantemente, ya que con esto, se logra
+establecer un vínculo entre distintas aplicaciones o incluso entre distintos sistemas. Esta
+técnica de comunicación al principio puede resultar un poco complicada ya que el no estar acostumbrado
+a leer documentación y tener poca experiencia en el tema son factores que desfavorecen el aprendizaje
+e incluso retrasan el desarrollo.
+
+Hablando específicamente de aplicaciones móviles en la plataforma iOS, hemos desarrollado un "Framework"
+que en realidad es un archivo tipo Singletone, que permite realizar peticiones a un API mediante funciones
+muy sencillas de comprender y de usar.
+
+El archivo lo pueden encontrar en el siguiente link: (Link del archivo)
+
+¿Qué funciones incluye?
+
+1.- api_request
+
+Esta función se compone de los siguientes parámetros:
+
+* Parámetros(parameters): Información que el request necesita, simplemente es un diccionario del tipo
+[String:Any] o llave valor por ejemplo ["id":1, "nombre":"usuario"].
+* Cabeceras(headers): Consta de un diccionario del tipo [String:String] por ejemplo
+["Accept":"application/json"], regularmente la información de las caberceras o headers
+son proporcionadas por la documentación de las peticiones.
+
+* Método https(method): Es una variable enum que solo permite poner uno de 4 valores disponibles,
+por ejemplo: .POST, .GET, .DELETE o .UPDATE
+* url: Es la dirección que consumirá o mandará información al servidor.
+Regularmente se compone de una url base seguida de un endpoint específico, por ejemplo:
+http://www.sitio.com/user/me, dónde http://www.sitio.com/ es la url base y user/me es el endpoint específico.
+
+Esta función también incluye 2 clousures, que son prácticamente funciones que se ejecutarán cuando la petición
+haya terminado, con esto nos referimos a que haya recibido respuesta del servidor. Además, responden con parámetros
+que corresponden a la información obtenida del tipo data o json y el status code que es de tipo entero, mas adelante
+con un ejemplo reforzaremos este concepto.
+
+Los clousures se pueden definir como:
+* OnSuccess(Data, Any): Esta función se llama cuando la petición responde con statusCode 200 o 201, los cuales indican
+que el request se ha hecho de manera exitosa, los parametros data y Any, son la información que envía el servidor, data esta en
+es el tipo de dato que permite de manera muy sencilla convertirla a formato json y Any esta disponible para convertir al tipo de dato deseado.
+* OnFailure([String:Any],Int): Esta función se llama cuando la petición responde con un statusCode diferente a 200 o 201
+los cuales indican que el request se ha hecho de manera errónea, los parámetros [String:Any] e Int, corresponden a
+un json con información del error que sucedió y el valor de tipo entero es el statusCode de error que se obtuvo.
+
+Ejemplo:
+
+Antes de mostrarlo como recomendación sugerimos crear un archivo de tipo singletone que estará compuesto
+por las funciones que se encargarán de hacer las peticiones a el API, agregando clousures para poder manipular la
+respuesta del servidor.
+
+Ahora sí, pasemos a los ejemplos:
+
+El siguiente ejemplo muestra como se implementa una función que se encarga de registrar a un usuario.
+
+func registerUser(_ email: String, name: String, _ password: String, _ deviceName: String, onSuccess: @escaping () -> Void, onFailure: @escaping (Int) -> Void) {
+  let headers: [String:String] = ["Accept":"application/json"]
+  let params: [String:Any] = [String:Any]()
+  let url: String = "https://www.website.com/register"
+  CsRequest.sharedInstance.api_request(parameters: params, headers: headers, method: .POST, url: url, onSuccess: { (data_response, json) in
+    let json = json as! [String:Any]
+    Este bloque de código se ejecutará cuando la petición se haya hecho exitosamente, esta primer línea
+    convierte la data obtenida a un diccionario del tipo [String:Any] y de esta manera podemos extraer la información que necesitemos. Una recomendación
+    para este punto es imprimir con la función print el json ya convertido, esto para conocer la estructura que tiene
+    la información y utilizarla de manera correcta.
+
+    Una ves terminado el procesamiento de la información a utilizar ejecutamos el clousure onSuccess() el cual será implementado
+    en el controlador de módulo para poder realizar alguna acción que este relacionada al request.
+    onSuccess()
+  }) { (json, status_code) in
+    Este bloque se ejecutará cuando  la petición haya fallado, algo importante a recalcar en este bloque es que el status_code será 0 cuando no haya conexión a internet.
+    onFailure(status_code)
+  }
+}
+
+NOTA:  En caso de ser una petición que no necesite parámetros simplemente se debe mandar la consatnte params vacía, es decir solo
+esta en declarada en la definición.
+
+2.- upload_image.
+
+Esta función se compone de los siguientes parámetros:
+
+* Parámetros(parameters): Información que el request necesita, simplemente es un diccionario del tipo
+[String:Any] o llave valor por ejemplo ["id":1, "nombre":"usuario"].
+* paramName: Es el nombre del parámetro con el cual se va a identificar la imagen, este nombre debe ser proporsionado por la documentación
+del API del proyecto.
+* fileName: Corresponde al nombre que se le dará a la imagen, es realidad aquí es posible que pongas cualquier valor. Se recomienda que el nombre que le des este
+relacionado a el contenido o categoría de la imagen.
+* imageType: Corresponde al tipo de imgen que se intenta subir, por ejemplo PNG o JPEG, este parametro esta relacionado a un enum, por lo tanto
+solo se deberá poner .jpeg o .png según sea el caso.
+* Cabeceras(headers): Consta de un diccionario del tipo [String:String] por ejemplo
+["Accept":"application/json"], regularmente la información de las caberceras o headers
+son proporcionadas por la documentación de las peticiones.
+* Método https(method): Es una variable enum que solo permite poner uno de 4 valores disponibles,
+por ejemplo: .POST, .GET, .DELETE o .UPDATE
+* url: Es la dirección que consumirá o mandará información al servidor.
+Regularmente se compone de una url base seguida de un endpoint específico, por ejemplo:
+http://www.sitio.com/user/me, dónde http://www.sitio.com/ es la url base y user/me es el endpoint específico.
+
+Esta función también incluye 2 clousures, que son prácticamente funciones que se ejecutarán cuando la petición
+haya terminado, con esto nos referimos a que haya recibido respuesta del servidor. Además, responden con parámetros
+que corresponden a la información obtenida del tipo data o json y el status code que es de tipo entero, mas adelante
+con un ejemplo reforzaremos este concepto.
+
+El siguiente ejemplo muestra como se implementa una función que se encarga de subir una imagen al servidor, aquí es posible
+solo subir la imagen o subir una imagen con más datos, por ejemplo nombre, correo, etc.
+
+func upload_image(_ product_id: Int, _ file: UIImage ,onSuccess: @escaping () -> Void, onFailure: @escaping (Int) -> Void)  {
+  let headers: [String:String] = ["Accept":"application/json", "Content-Type":"multipart/form-data", "Authorization": "Bearer \(GlobalFunctions.sharedInstance.getToken())"]
+  let params: [String:Any] = ["producto_id":product_id]
+  let url: String = "https://www.website.com/register"
+  CsRequest.sharedInstance.upload_image(parameters: params, paramName: "archivo", fileName: "image", image: file, url: url, headers: headers, imageType: .jpeg, onSuccess: { (json, status_code) in
+    Al igual que el ejemplo anterior, este bloque se ejecutará cuando la petición se haya ejecutado exitosamente.
+    onSuccess()
+  }) { (json, status_code) in
+  Este bloque se ejecutará cuando  la petición haya fallado, algo importante a recalcar en este bloque es que el status_code será 0 cuando no haya conexión a internet.
+      onFailure(status_code)
+  }
+}
+
+3.- download_image.
+
+Esta función no se debe implementar simplemente usar, ya que solo se encarga de descargar una imagen y mostrarla en el imageView deseado,
+veamos un ejemplo para que quede más claro.
+
+Como primer paso debemos tener nuestro Outlet creado, el cual, estará relacionado a un imageView.
+
+@IBOutlet weak var image: Imageview!
