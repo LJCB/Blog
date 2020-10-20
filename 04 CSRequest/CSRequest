@@ -1,4 +1,4 @@
-CSRequest,
+CSRequest, peticiones rápidas y sencillas.
 
 Las llamadas o peticiones a servidores para almacenar o consultar información por medio de una API Rest
 es un recurso que la mayoría de los programadores utilizan constantemente, ya que con esto, se logra
@@ -11,7 +11,7 @@ Hablando específicamente de aplicaciones móviles en la plataforma iOS, hemos d
 que en realidad es un archivo tipo Singletone, que permite realizar peticiones a un API mediante funciones
 muy sencillas de comprender y de usar.
 
-El archivo lo pueden encontrar en el siguiente link: (Link del archivo)
+El archivo lo pueden encontrar en el siguiente link: https://github.com/LJCB/CsRequest/blob/master/CsRequest.swift
 
 ¿Qué funciones incluye?
 
@@ -121,9 +121,22 @@ func upload_image(_ product_id: Int, _ file: UIImage ,onSuccess: @escaping () ->
 
 3.- download_image.
 
-Esta función no se debe implementar simplemente usar, ya que solo se encarga de descargar una imagen y mostrarla en el imageView deseado,
+Esta función NO se debe implementar simplemente usar, ya que solo se encarga de descargar una imagen y mostrarla en el imageView deseado,
 veamos un ejemplo para que quede más claro.
 
 Como primer paso debemos tener nuestro Outlet creado, el cual, estará relacionado a un imageView.
 
 @IBOutlet weak var image: Imageview!
+
+El siguiente paso es llamar a la función download_image y listo, esto se hace de la siguiente manera.
+
+CsRequest.sharedInstance.download_image("image_url)", place_holder_image: image, in_image_view: image)
+
+A continuación se describen los parámetros que recibe.
+
+1.- Hace referencia al URL de la imagen en formato String.
+2.- Una imagen placeholder que se mostrará mientras se descarga la imagen solicitada.
+3.- El image view en el cual se quiere mostrar la imagen.
+
+Ahora que ya conoces esta increíble herramienta te invito a que la uses en tus proyectos, es sencilla, ligera, fácil de
+instalar y lo mejor de todo es gratis y de código abierto, lo cual, te permitirá realizar ajustes en caso de que lo necesites.
