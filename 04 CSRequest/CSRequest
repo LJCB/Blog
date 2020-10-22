@@ -33,12 +33,13 @@ http://www.sitio.com/user/me, dónde http://www.sitio.com/ es la url base y user
 
 Esta función también incluye 2 clousures, que son prácticamente funciones que se ejecutarán cuando la petición
 haya terminado, con esto nos referimos a que haya recibido respuesta del servidor. Además, responden con parámetros
-que corresponden a la información obtenida del tipo data o json y el status code que es de tipo entero, mas adelante
+que corresponden a la información obtenida del tipo data o json y el status code que es de tipo entero, más adelante
 con un ejemplo reforzaremos este concepto.
 
 Los clousures se pueden definir como:
+
 * OnSuccess(Data, Any): Esta función se llama cuando la petición responde con statusCode 200 o 201, los cuales indican
-que el request se ha hecho de manera exitosa, los parametros data y Any, son la información que envía el servidor, data esta en
+que el request se ha hecho de manera exitosa, los parametros data y Any, son la información que envía el servidor, data está en
 es el tipo de dato que permite de manera muy sencilla convertirla a formato json y Any esta disponible para convertir al tipo de dato deseado.
 * OnFailure([String:Any],Int): Esta función se llama cuando la petición responde con un statusCode diferente a 200 o 201
 los cuales indican que el request se ha hecho de manera errónea, los parámetros [String:Any] e Int, corresponden a
@@ -52,7 +53,7 @@ respuesta del servidor.
 
 Ahora sí, pasemos a los ejemplos:
 
-El siguiente ejemplo muestra como se implementa una función que se encarga de registrar a un usuario.
+El siguiente ejemplo muestra cómo se implementa una función que se encarga de registrar a un usuario.
 
 func registerUser(_ email: String, name: String, _ password: String, _ deviceName: String, onSuccess: @escaping () -> Void, onFailure: @escaping (Int) -> Void) {
   let headers: [String:String] = ["Accept":"application/json"]
@@ -65,8 +66,8 @@ func registerUser(_ email: String, name: String, _ password: String, _ deviceNam
     para este punto es imprimir con la función print el json ya convertido, esto para conocer la estructura que tiene
     la información y utilizarla de manera correcta.
 
-    Una ves terminado el procesamiento de la información a utilizar ejecutamos el clousure onSuccess() el cual será implementado
-    en el controlador de módulo para poder realizar alguna acción que este relacionada al request.
+    Una vez terminado el procesamiento de la información a utilizar ejecutamos el clousure onSuccess() el cual será implementado
+    en el controlador de módulo para poder realizar alguna acción que esté relacionada al request.
     onSuccess()
   }) { (json, status_code) in
     Este bloque se ejecutará cuando  la petición haya fallado, algo importante a recalcar en este bloque es que el status_code será 0 cuando no haya conexión a internet.
@@ -74,8 +75,8 @@ func registerUser(_ email: String, name: String, _ password: String, _ deviceNam
   }
 }
 
-NOTA:  En caso de ser una petición que no necesite parámetros simplemente se debe mandar la consatnte params vacía, es decir solo
-esta en declarada en la definición.
+NOTA:  En caso de ser una petición que no necesite parámetros simplemente se debe mandar la consatnte params vacía, es decir solo como
+está declarada en la definición.
 
 2.- upload_image.
 
@@ -83,12 +84,12 @@ Esta función se compone de los siguientes parámetros:
 
 * Parámetros(parameters): Información que el request necesita, simplemente es un diccionario del tipo
 [String:Any] o llave valor por ejemplo ["id":1, "nombre":"usuario"].
-* paramName: Es el nombre del parámetro con el cual se va a identificar la imagen, este nombre debe ser proporsionado por la documentación
+* paramName: Es el nombre del parámetro con el cual se va a identificar la imagen, este nombre debe ser proporcionado por la documentación
 del API del proyecto.
-* fileName: Corresponde al nombre que se le dará a la imagen, es realidad aquí es posible que pongas cualquier valor. Se recomienda que el nombre que le des este
+* fileName: Corresponde al nombre que se le dará a la imagen, es realidad aquí es posible que pongas cualquier valor. Se recomienda que el nombre que le des esté
 relacionado a el contenido o categoría de la imagen.
-* imageType: Corresponde al tipo de imgen que se intenta subir, por ejemplo PNG o JPEG, este parametro esta relacionado a un enum, por lo tanto
-solo se deberá poner .jpeg o .png según sea el caso.
+* imageType: Corresponde al tipo de imgen que se intenta subir, por ejemplo PNG o JPEG, este parámetro está relacionado a un enum, por lo tanto
+solo se deberá poner .jpeg o .png, según sea el caso.
 * Cabeceras(headers): Consta de un diccionario del tipo [String:String] por ejemplo
 ["Accept":"application/json"], regularmente la información de las caberceras o headers
 son proporcionadas por la documentación de las peticiones.
@@ -100,7 +101,7 @@ http://www.sitio.com/user/me, dónde http://www.sitio.com/ es la url base y user
 
 Esta función también incluye 2 clousures, que son prácticamente funciones que se ejecutarán cuando la petición
 haya terminado, con esto nos referimos a que haya recibido respuesta del servidor. Además, responden con parámetros
-que corresponden a la información obtenida del tipo data o json y el status code que es de tipo entero, mas adelante
+que corresponden a la información obtenida del tipo data o json y el status code que es de tipo entero, más adelante
 con un ejemplo reforzaremos este concepto.
 
 El siguiente ejemplo muestra como se implementa una función que se encarga de subir una imagen al servidor, aquí es posible
@@ -121,7 +122,7 @@ func upload_image(_ product_id: Int, _ file: UIImage ,onSuccess: @escaping () ->
 
 3.- download_image.
 
-Esta función NO se debe implementar simplemente usar, ya que solo se encarga de descargar una imagen y mostrarla en el imageView deseado,
+Esta función NO se debe implementar simplemente se debe usar, ya que solo se encarga de descargar una imagen y mostrarla en el imageView deseado,
 veamos un ejemplo para que quede más claro.
 
 Como primer paso debemos tener nuestro Outlet creado, el cual, estará relacionado a un imageView.
